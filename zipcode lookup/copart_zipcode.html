@@ -1,0 +1,81 @@
+<html>
+  <head>
+    
+    <title>copart get city state from zipcode</title>    
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>      
+<style>
+      
+    #printcity{
+        
+        font-size: 20px;
+        
+    }
+    #printstate{
+        
+        font-size = 25px;
+        
+    }
+      </style>
+      <script>    
+        var mygeocode;
+         var address;    
+        var cityName;
+          var state;
+          var shortstate;
+         function findcitystate() {
+                    address = document.getElementById('address').value; // gettign the zipcode input
+                    mygeocode = new google.maps.Geocoder();// new geocode declare
+                    mygeocode.geocode({ 'address': address }, function (results, status) {// geocode function calling
+                if (status == google.maps.GeocoderStatus.OK) {                       
+                    // referred from http://opengeocode.org/tutorials/googlemap/googlemaps_6.php
+                    for (var searchcompo in results[0]['address_components']) { // navigating through componenets
+                      // referred from https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple  
+                        for (var i in results[0]['address_components'][searchcompo]['types']) {// navigate through address componenets types
+                          // standard reading for address components  
+                            if (results[0]['address_components'][searchcompo]['types'][i] ==  "administrative_area_level_1") {// find for level1 in output
+                                state = results[0]['address_components'][searchcompo]['long_name'];
+                               // console.log(cityName);
+                                cityName = results[0]['address_components'][1]['long_name']; // 
+                                 shortstate =   results[0]['address_components'][searchcompo]['short_name'];                   //console.log(state);
+                                document.getElementById("printcity").innerHTML = cityName; // printing on sreen properly
+                                document.getElementById("printstate").innerHTML = state;
+                                document.getElementById("expected").innerHTML = cityName+", "+shortstate+".";
+                             
+                            }
+                        }
+                       
+                    }                                           
+                } else {
+                    alert('Invalid Zipcode');
+                   
+                }
+            });
+       
+                }         
+
+    </script>
+  </head>
+  <body>
+      <br/>
+      <h1>Type zipcode to get city and state</h1>
+    <div id="panel">
+      <input id="address" type="textbox" placeholder="zip code">
+      <input type="button" value="find city" onclick="findcitystate()">
+    </div>
+       <br/>
+       <br/>
+      <p id="printcity">
+      City
+      </p>
+      
+      <p id="printstate">
+      State
+      </p>
+      
+      <p id="expected">
+      Expected output
+      </p>
+      
+    
+  </body>
+</html>
